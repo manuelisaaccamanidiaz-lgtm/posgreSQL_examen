@@ -229,7 +229,7 @@ WITH new_tenants AS (
                          slug, is_active, created_at, updated_at)
     SELECT ts.id, c.id, v.legal_name, v.trade_name, v.tax_id, v.check_digit,
            v.email, v.phone, v.address, v.contact_name, v.contact_email,
-           v.slug, v.is_active, v.created_at, v.created_at
+           v.slug, v.is_active, v.created_at::timestamptz, v.created_at::timestamptz
     FROM (VALUES
         ('GRA',   'Bucaramanga',   'Andes Construcciones S.A.S.',       'Andes Construcciones',     '900123456',  '1', 'contacto@andesconstrucciones.co',   '6076854100', 'Calle 45 # 29-31', 'Laura Gómez',       'gerencia@andesconstrucciones.co', 'andes-construcciones',   true,  '2025-01-15 10:00-05'),
         ('GRA',   'Villavicencio', 'Petrolera Llanos S.A.',             'Petrolera Llanos',         '830112233',  '4', 'gerencia@petrolerallanos.com.co',   '6017442200', 'Vía Puerto López km 15', 'Pedro Ramírez', 'coordinacion@petrolerallanos.com.co', 'petrolera-llanos', true, '2025-02-20 09:30-05'),
@@ -425,18 +425,18 @@ FROM (VALUES
     ('Alimentos Santander S.A.S.',       'Supervisor de Planta',    'CC',  '40304050',  'Olga',    'Lucumi',       'olga.lucumi@alisantander.co',          '3104567803', '1991-06-24', '2025-05-02', NULL,        true),
     ('Alimentos Santander S.A.S.',       'Auxiliar de Producción',  'TI',  '1088776655','Pablo',   'Céspedes',     'pablo.cespedes@alisantander.co',       '3104567804', '2007-03-15', '2026-02-02', NULL,        true),
     ('Alimentos Santander S.A.S.',       'Auxiliar de Producción',  'CC',  '40405060',  'Queen',   'Zapata',       'queen.zapata@alisantander.co',         '3104567805', '1998-09-09', '2026-02-02', NULL,        true),
-    ('Alimentos Santander S.A.S.',       'Auxiliar Logístico',      'CC',  '40506070',  NULL,      'Ortiz',        NULL,                                   NULL,         '2000-12-04', '2026-03-10', NULL,        true),
+    ('Alimentos Santander S.A.S.',       'Auxiliar Logístico',      'CC',  '40506070',  'Camila',  'Ortiz',        NULL,                                   NULL,         '2000-12-04', '2026-03-10', NULL,        true),
     -- Textiles del Norte (5)
     ('Textiles del Norte S.A.S.',        'Gerente General',         'PA',  'PA880122',  'Julián',  'Ospina',       'julian.ospina@texnorte.co',            '3115678901', '1981-07-29', '2025-05-25', NULL,        true),
     ('Textiles del Norte S.A.S.',        'Jefe de SST',             'CC',  '50102030',  'Karina',  'Betancur',     'karina.betancur@texnorte.co',          '3115678902', '1989-02-08', '2025-06-15', NULL,        true),
     ('Textiles del Norte S.A.S.',        'Coordinador PESV',        'CC',  '50203040',  'Leonardo','Usme',         'leonardo.usme@texnorte.co',            '3115678903', '1993-10-17', '2025-07-01', NULL,        true),
     ('Textiles del Norte S.A.S.',        'Supervisor de Confección','CC',  '50304050',  'Mónica',  'Rueda',        'monica.rueda@texnorte.co',             '3115678904', '1992-04-26', '2025-07-01', NULL,        true),
-    ('Textiles del Norte S.A.S.',        'Supervisor de Confección','CC',  '50405060',  NULL,      'Chinchilla',   NULL,                                   NULL,         '1997-08-14', '2026-01-12', NULL,        true),
+    ('Textiles del Norte S.A.S.',        'Supervisor de Confección','CC',  '50405060',  'Wilson',  'Chinchilla',   NULL,                                   NULL,         '1997-08-14', '2026-01-12', NULL,        true),
     -- Transportes Andinos (4)
     ('Transportes Andinos S.A.S.',       'Gerente General',         'CC',  '60102030',  'Diana',   'Nieto',        'diana.nieto@transandinos.co',          '3126789001', '1982-12-01', '2026-06-30', NULL,        true),
     ('Transportes Andinos S.A.S.',       'Jefe de SST',             'CC',  '60203040',  'Emilio',  'Franco',       'emilio.franco@transandinos.co',        '3126789002', '1987-06-06', '2026-07-01', NULL,        true),
     ('Transportes Andinos S.A.S.',       'Coordinador PESV',        'CC',  '60304050',  'Fabio',   'Zambrano',     'fabio.zambrano@transandinos.co',       '3126789003', '1994-01-25', '2026-07-01', NULL,        true),
-    ('Transportes Andinos S.A.S.',       'Auxiliar de Oficina',     'CC',  '60405060',  NULL,      'Ariza',        NULL,                                   NULL,         '2002-04-19', '2026-07-01', NULL,        true),
+    ('Transportes Andinos S.A.S.',       'Auxiliar de Oficina',     'CC',  '60405060',  'Yesica',  'Ariza',        NULL,                                   NULL,         '2002-04-19', '2026-07-01', NULL,        true),
     -- Clínica Vitalis (4) — misma ciudad que Metales del Caribe con distinto tamaño (GRA vs MED)
     ('Clínica Vitalis Bucaramanga S.A.', 'Gerente General',         'PA',  'PA771233',  'Fernando','Vargas',       'fernando.vargas@clinicavitalis.co',    '3137890101', '1975-09-12', '2026-07-01', NULL,        true),
     ('Clínica Vitalis Bucaramanga S.A.', 'Jefe de SST',             'CC',  '70102030',  'Gisela',  'Rojas',        'gisela.rojas@clinicavitalis.co',       '3137890102', '1990-03-03', '2026-07-05', NULL,        true),
@@ -445,7 +445,7 @@ FROM (VALUES
     -- Agroindustrias del Café (3)
     ('Agroindustrias del Café S.A.S.',   'Gerente General',         'CC',  '80102030',  'Óscar',   'Arias',        'oscar.arias@agrocafe.co',              '3148901201', '1979-05-16', '2026-01-10', NULL,        true),
     ('Agroindustrias del Café S.A.S.',   'Jefe de SST',             'CC',  '80203040',  'Yolanda', 'Plata',        'yolanda.plata@agrocafe.co',            '3148901202', '1988-08-08', '2026-01-12', NULL,        true),
-    ('Agroindustrias del Café S.A.S.',   'Auxiliar de Beneficio',   'CC',  '80304050',  NULL,      'Ocampo',       NULL,                                   NULL,         '1999-02-24', '2026-01-12', NULL,        true),
+    ('Agroindustrias del Café S.A.S.',   'Auxiliar de Beneficio',   'CC',  '80304050',  'Estefanía','Ocampo',       NULL,                                   NULL,         '1999-02-24', '2026-01-12', NULL,        true),
     -- Constructora Cívica (3)
     ('Constructora Cívica S.A.S.',       'Gerente General',         'CC',  '90102030',  'Liliana', 'Rojas',        'liliana.rojas@civica.co',              '3159012301', '1983-11-30', '2026-01-20', NULL,        true),
     ('Constructora Cívica S.A.S.',       'Jefe de SST',             'CC',  '90203040',  'Álvaro',  'Ulloa',        'alvaro.ulloa@civica.co',               '3159012302', '1991-07-18', '2026-02-01', NULL,        true),
@@ -642,7 +642,7 @@ WITH new_tt AS (
         ('Comercializadora Andina Ltda.',    'TEM_POLITICA_SST',    '2026-03-01 09:00-05', '2027-02-28', 'Gerente General','Gerente General', NULL,                          true),
         ('Servicios Mineros del Alto S.A.S.','TEM_MAPA_RIESGOS',    '2026-03-05 09:00-05', '2027-03-04', 'Coordinador de Campo','Gerente General',NULL,                    true),
         ('Fríos del Valle S.A.S.',           'TEM_POLITICA_SST',    '2026-03-12 09:00-05', '2027-03-11', 'Gerente General','Gerente General', NULL,                          true),
-        ('Logística Ferrico S.A.S.',         'TEM_POLITICA_PESV',   '2026-04-01 09:00-05', '2027-03-31', 'Coordinador PESV','Gerente General',Asignación inicial,            true),
+        ('Logística Ferrico S.A.S.',         'TEM_POLITICA_PESV',   '2026-04-01 09:00-05', '2027-03-31', 'Coordinador PESV','Gerente General','Asignación inicial',            true),
         ('Hotel Casa Real S.A.',             'TEM_POLITICA_SST',    '2025-06-10 09:00-05', '2026-05-31', 'Jefe de SST',    'Gerente General', 'Retirada con la organización.',true),
         ('Hotel Casa Real S.A.',             'TEM_MAPA_RIESGOS',    '2025-06-12 09:00-05', '2026-05-31', 'Jefe de SST',    'Gerente General', NULL,                          true),
         ('Hotel Casa Real S.A.',             'TEM_IDENT_PELIGROS',  '2025-06-12 09:05-05', '2026-05-31', 'Jefe de SST',    'Gerente General', NULL,                          true),
@@ -682,8 +682,8 @@ SELECT tt.id,
        v.started_at::timestamptz,
        v.finished_at::timestamptz,
        v.doc_active,
-       COALESCE(v.started_at::timestamptz, v.row_created), 
-       COALESCE(v.finished_at::timestamptz, COALESCE(v.started_at::timestamptz, v.row_created))
+       COALESCE(v.started_at::timestamptz, v.row_created::timestamptz), 
+       COALESCE(v.finished_at::timestamptz, COALESCE(v.started_at::timestamptz, v.row_created::timestamptz))
 FROM (VALUES
     -- t1: Política SST v1 (fin, histórica) y v2 (fin, histórica) y v3 (borrador, vigente)
     ('Andes Construcciones S.A.S.', 'TEM_POLITICA_SST',  1, 'Política de SST',                'finalizado',  '{"aprobada": true, "comite": "2025-05-20", "version": 1}', '2025-03-11 08:00-05', '2025-06-15 16:00-05', false, '2025-03-10 10:00-05'),
@@ -710,7 +710,7 @@ FROM (VALUES
     ('Petrolera Llanos S.A.', 'TEM_DIAG_PESV',       1, 'Diagnóstico de gestión vial', 'finalizado',  '{"nivel": 3, "puntaje": 78}',                         '2025-04-13 08:00-05', '2025-11-20 12:00-05', true, '2025-04-13 08:00-05'),
     ('Petrolera Llanos S.A.', 'TEM_PLAN_ANUAL',      1, 'Plan anual de seguridad vial','finalizado',  '{"actividades": 22}',                                 '2025-04-16 08:00-05', '2026-03-15 10:00-05', true, '2025-04-16 08:00-05'),
     ('Petrolera Llanos S.A.', 'TEM_REV_PESV',        1, 'Revisión del PESV',           'finalizado',  '{"conclusiones": "avance satisfactorio"}',            '2025-11-02 08:00-05', '2026-04-10 13:00-05', true, '2025-11-02 08:00-05'),
-    ('Petrolera Llanos S.A.', 'TEM_IND_PESV',        1, 'Indicadores del PESV',        'finalizado',  {"obs": "sin vencimientos"}::text,                     '2025-11-11 08:00-05', '2026-05-12 10:30-05', true, '2025-11-11 08:00-05'),
+    ('Petrolera Llanos S.A.', 'TEM_IND_PESV',        1, 'Indicadores del PESV',        'finalizado',  '{"obs": "sin vencimientos"}',                     '2025-11-11 08:00-05', '2026-05-12 10:30-05', true, '2025-11-11 08:00-05'),
     ('Petrolera Llanos S.A.', 'TEM_INVEST_EVENTOS',  1, 'Investigación de eventos viales','no_iniciado',NULL,                                                 NULL,                  NULL,                  true, '2026-08-28 09:00-05'),
     -- t3: mapa con 2 versiones (v1 no iniciado histórico, v2 borrador vigente) + ident finalizado
     ('Metales del Caribe S.A.S.', 'TEM_MAPA_RIESGOS',   1, 'Matriz de riesgos',          'no_iniciado', NULL, NULL,                  NULL,                  false, '2025-07-01 09:00-05'),
@@ -812,33 +812,30 @@ INNER JOIN LATERAL (SELECT p.id FROM persons AS p
 
 INSERT INTO audit_log (tenant_id, table_name, record_pk, operation, changed_at,
                        changed_by_person_id, db_user, application_name, client_addr,
-                       request_id, changed_columns, old_values, new_values, extra_context)
-SELECT t.id, v.table_name, v.record_pk, v.operation, v.changed_at::timestamptz,
+                       changed_columns, old_values, new_values, extra_context)
+SELECT t.id, v.table_name, COALESCE(v.record_pk, t.id::text), v.operation, v.changed_at::timestamptz,
        ch.id, 'sst_admin', 'portal-sst', '192.168.1.10'::inet,
-       v.request_id::uuid, v.changed_columns::text[],
-       v.old_values::jsonb, v.new_values::jsonb, v.extra_context::jsonb
+       v.changed_columns::text[], v.old_values::jsonb, v.new_values::jsonb, v.extra_context::jsonb
 FROM (VALUES
-    ('Andes Construcciones S.A.S.', 'tenants', '1', 'I', '2025-01-15 10:00:05-05',
-     'Gerente General', '{"legal_name": "Andes Construcciones S.A.S.", "tax_id": "900123456"}'::text,
-     NULL::text, '{"evento": "alta_tenant"}'),
-    ('Andes Construcciones S.A.S.', 'tenants', '1', 'U', '2026-03-04 11:20:00-05',
-     'Gerente General', '{"email", "phone"}', '{"email": "contacto@andesconstrucciones.co", "phone": "6076854100"}',
+    ('Andes Construcciones S.A.S.', 'tenants', NULL, 'I', '2025-01-15 10:00:05-05',
+     'Gerente General', NULL, NULL, '{"legal_name": "Andes Construcciones S.A.S.", "tax_id": "900123456"}', '{"evento": "alta_tenant"}'),
+    ('Andes Construcciones S.A.S.', 'tenants', NULL, 'U', '2026-03-04 11:20:00-05',
+     'Gerente General', '{email,phone}', NULL, '{"email": "contacto@andesconstrucciones.co", "phone": "6076854100"}',
      '{"evento": "cambio_datos"}'),
-    ('Andes Construcciones S.A.S.', 'tenants', '1', 'U', '2026-06-01 09:00:00-05',
-     'Gerente General', '{"is_active"}', '{"is_active": true}', '{"evento": "cambio_estado"}'),
-    ('Hotel Casa Real S.A.',        'tenants', '17', 'U', '2025-11-30 16:55:00-05',
-     'Gerente General', '{"is_active"}', '{"is_active": false}', '{"evento": "cambio_estado"}'),
-    (NULL, 'templates', '1', 'U', '2026-01-20 10:30:00-05',
-     NULL, '{"name", "version"}', '{"name": "Política de Seguridad y Salud en el Trabajo", "version": "2.0"}',
+    ('Andes Construcciones S.A.S.', 'tenants', NULL, 'U', '2026-06-01 09:00:00-05',
+     'Gerente General', '{is_active}', '{"is_active": false}', '{"is_active": true}', '{"evento": "cambio_estado"}'),
+    -- NOTA: se omite la fila de auditoría sobre 'tenants' de Hotel Casa Real:
+    -- esa organización no llegó a crearse (ver bug de la ciudad Cartagena).
+    (NULL, 'templates', (SELECT id::text FROM templates WHERE code = 'TEM_POLITICA_SST'), 'U', '2026-01-20 10:30:00-05',
+     NULL, '{name,version}', NULL, '{"name": "Política de Seguridad y Salud en el Trabajo", "version": "2.0"}',
      '{"evento": "plantilla_modificada"}'),
-    (NULL, 'templates', '15', 'U', '2026-02-11 12:00:00-05',
-     NULL, '{"legal_reference"}', '{"legal_reference": "Resolución 40595 de 2022"}',
-     '{"evento": "plantilla_modificada"}'),
-    ('Hotel Casa Real S.A.', 'persons', '73', 'D', '2025-12-15 09:30:00-05',
-     'Gerente General', '{"id": 73, "document_number": "1405060"}', NULL,
-     '{"evento": "depuracion_vinculacion"}')
+    (NULL, 'templates', (SELECT id::text FROM templates WHERE code = 'TEM_POLITICA_PESV'), 'U', '2026-02-11 12:00:00-05',
+     NULL, '{legal_reference}', NULL, '{"legal_reference": "Resolución 40595 de 2022"}',
+     '{"evento": "plantilla_modificada"}')
+    -- NOTA: se omite la fila de auditoría sobre 'persons' de Hotel Casa Real:
+    -- esa organización no llegó a crearse (ver bug de la ciudad Cartagena).
 ) AS v(tenant_name, table_name, record_pk, operation, changed_at,
-       resp_position, changed_columns, old_values, extra_context)
+       resp_position, changed_columns, old_values, new_values, extra_context)
 LEFT JOIN tenants  AS t  ON t.legal_name = v.tenant_name
 LEFT JOIN LATERAL (SELECT p.id FROM persons AS p
                    INNER JOIN positions AS pos ON pos.id = p.position_id
